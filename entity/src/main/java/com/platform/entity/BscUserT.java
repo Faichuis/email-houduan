@@ -21,7 +21,7 @@ public class BscUserT implements Serializable {
     private String userCode;
 
     /* 用户名 */
-    private String userName;
+    private String userName; 
 
     /* 用户密码 */
     private String userPwd;
