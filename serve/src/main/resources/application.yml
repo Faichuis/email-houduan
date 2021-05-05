@@ -1,0 +1,9 @@
+server:
+  port: 9999
+
+spring:
+  profiles:
+    active: local
+#
+#logging:
+#  config: classpath:log4j2.yml

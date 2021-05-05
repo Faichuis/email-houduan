@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.platform.serve.mapper.TOutboxMainMapper">
+
+    <select id="selectOutboxEmailList" parameterType="com.platform.serve.inner.dto.EmailInfoDto"
+            resultType="com.platform.serve.inner.dto.EmailInfoDto">
+        SELECT DISTINCT
+            main.email_id,
+            main.subject,
+            main.from_address,
+            main.receivers,
+            main.carbon_copys,
+            main.blind_carbon_copys,
+            main.out_email_type,
+            main.pririty,
+            main.is_replay_sign,
+            main.maker_date,
+            main.send_status,
+            main.size,
+            main.contain_file,
+            main.account,
+            main.pet_name,
+            main.user_code,
+            main.remark,
+            content.content
+        FROM
+            t_outbox_main main
+            LEFT JOIN t_content_info content ON main.email_id = content.email_id AND main.user_code = content.user_code
+        WHERE
+        main.user_code = #{dto.userCode}
+        <if test="dto.subject != null and dto.subject != '' ">
+            AND main.subject LIKE CONCAT('%',#{dto.subject},'%')
+        </if>
+        <if test="dto.fromAddress != null and dto.fromAddress != '' ">
+            AND main.from_address LIKE CONCAT('%',#{dto.fromAddress},'%')
+        </if>
+        <if test="dto.receivers != null and dto.receivers != '' ">
+            AND main.receivers LIKE CONCAT('%',#{dto.receivers},'%')
+        </if>
+        <if test="dto.carbonCopys != null and dto.carbonCopys != '' ">
+            AND main.carbon_copys LIKE CONCAT('%',#{dto.carbonCopys},'%')
+        </if>
+        <if test="dto.blindCarbonCopys != null and dto.blindCarbonCopys != '' ">
+            AND main.blind_carbon_copys LIKE CONCAT('%',#{dto.blindCarbonCopys},'%')
+        </if>
+        <if test="dto.content != null and dto.content != '' ">
+            AND content.content LIKE CONCAT('%',#{dto.content},'%')
+        </if>
+        <if test="dto.outEmailType != null and dto.outEmailType != '' ">
+            AND main.out_email_type = #{dto.outEmailType}
+        </if>
+        <if test="dto.pririty != null and dto.pririty != '' ">
+            AND main.pririty = #{dto.pririty}
+        </if>
+        <if test="dto.sendStatus != null and dto.sendStatus != '' ">
+            AND main.send_status = #{dto.sendStatus}
+        </if>
+        <if test="dto.dataStatus != null and dto.dataStatus != '' ">
+              AND main.data_status = #{dto.dataStatus}
+        </if>
+        <if test="dto.account != null and dto.account != '' ">
+            AND main.account = #{dto.account}
+            AND content.account = #{dto.account}
+        </if>
+        <if test="dto.emailId != null and dto.emailId != '' ">
+            AND main.email_id = #{dto.emailId}
+        </if>
+        <if test="dto.makerDate != null and dto.makerDate != '' ">
+            AND main.maker_date <![CDATA[ > ]]>#{dto.makerDate}
+        </if>
+        AND main.creat_date > DATE_SUB( NOW( ), INTERVAL 5 YEAR )
+        ORDER BY main.creat_date DESC
+    </select>
+
+</mapper>

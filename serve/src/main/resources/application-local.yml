@@ -1,0 +1,79 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/email?useSSL=false&serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: root
+#
+#  redis:
+#    host: 127.0.0.1 # Redis服务器地址
+#    database: 0 # Redis数据库索引（默认为0）
+#    port: 6379 # Redis服务器连接端口
+#    password:  # Redis服务器连接密码（默认为空）
+#    lettuce:
+#      pool:
+#        max-active: 8 # 连接池最大连接数（使用负值表示没有限制）
+#        max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制）
+#        max-idle: 8 # 连接池中的最大空闲连接
+#        min-idle: 0 # 连接池中的最小空闲连接
+#    timeout: 5000ms # 连接超时时间（毫秒）
+#
+#
+#
+# mybatis配置
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.redis.demo.redisdemo.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 1
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    #refresh-mapper: true
+    #数据库大写下划线转换
+    capital-mode: true
+    # Sequence序列接口实现类配置
+    key-generator: com.baomidou.mybatisplus.incrementer.OracleKeyGenerator
+    #逻辑删除配置（下面3个配置）
+    #logic-delete-value: 1
+    #logic-not-delete-value: 0
+    #sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+    #自定义填充策略接口实现
+    #meta-object-handler: com.baomidou.springboot.MyMetaObjectHandler
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull
+    jdbc-type-for-null: 'null'
+
+
+logging:
+  config: classpath:log4j2-spring.xml
+  level:
+    cn.jay.repository: trace
+
+
+#配置文件传输
+spring.servlet.multipart.enabled: true
+spring.servlet.multipart.file-size-threshold: 0
+#单个数据的大小
+spring.servlet.multipart.max-file-size: 5MB
+#总数据的大小
+spring.servlet.multipart.max-request-size: 10MB
+
+
+
+
+simple.mail:
+  server: smtp.163.com
+  sender: youXiangcs321@163.com
+  smtpPort: 25
+  username: youXiangcs321@163.com
+  password: NFYRFWYZDTCJLHBO

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.platform.serve.mapper.BscUserTMapper">
+
+    <select id="checkUniquenessRegisterData" parameterType="java.lang.String" resultType="com.platform.entity.BscUserT">
+        SELECT DISTINCT
+            *
+        FROM
+            bsc_user_t but
+        WHERE
+            <if test="dataStatus != null and dataStatus != '' ">
+                but.data_status <![CDATA[ = ]]> #{dataStatus}
+                AND
+            </if>
+            (
+                  1!=1
+                <if test="userCode != null and userCode != '' ">
+                   OR but.user_code = #{userCode}
+                </if>
+                <if test="loginPhone != null and loginPhone != '' ">
+                  OR but.login_phone = #{loginPhone}
+                </if>
+                <if test="loginEmail != null and loginEmail != '' ">
+                  OR but.login_email = #{loginEmail}
+                </if>
+            )
+    </select>
+
+</mapper>

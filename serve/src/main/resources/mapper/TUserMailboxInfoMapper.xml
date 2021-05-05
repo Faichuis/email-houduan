@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.platform.serve.mapper.TUserMailboxInfoMapper">
+
+    <select id="getUserMailBoxInfoList" parameterType="java.lang.String" resultType="com.platform.serve.inner.share.dto.UserMailBoxInfoDto">
+        SELECT DISTINCT
+            mail.user_code,
+            mail.user_name,
+            mail.account,
+            mail.`password`,
+            smtp.mail_code,
+            smtp.mail_desc,
+            smtp.mail_type,
+            smtp.host_code,
+            smtp.host_desc,
+            smtp.port_code,
+            smtp.port_desc,
+            smtp.mailbox_suffix,
+            mail.data_status
+        FROM
+            t_user_mailbox_info mail,
+            bsc_smtp_protocol_t smtp
+        WHERE
+            mail.mailbox_suffix = smtp.mailbox_suffix
+            <if test="dataStatus != null and dataStatus != '' ">
+                AND mail.data_status = #{dataStatus}
+                AND smtp.data_status = #{dataStatus}
+            </if>
+            <choose>
+                <when test="mailType != null and mailType == '1'.toString() ">
+                    AND mail.store_code = smtp.mail_code AND smtp.mail_type = '1'
+                </when>
+                <when test="mailType != null and mailType == '2'.toString() ">
+                    AND mail.transport_code = smtp.mail_code AND smtp.mail_type = '2'
+                </when>
+                <otherwise>
+                    AND (
+                    ( mail.store_code = smtp.mail_code AND smtp.mail_type = '1' )
+                    OR ( mail.transport_code = smtp.mail_code AND smtp.mail_type = '2' )
+                    )
+                </otherwise>
+            </choose>
+            <if test="account != null and account != '' ">
+                AND mail.account = #{account}
+            </if>
+            <if test="mailboxSuffix != null and mailboxSuffix != '' ">
+                AND mail.mailbox_suffix = #{mailboxSuffix}
+            </if>
+            <if test="userCode != null and userCode != '' ">
+                AND mail.user_code = #{userCode}
+            </if>
+
+    </select>
+
+</mapper>
