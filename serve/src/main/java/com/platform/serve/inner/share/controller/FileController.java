@@ -32,7 +32,7 @@ public class FileController {
     @SuppressWarnings(value = {"unchecked", "deprecation"})//告诉编译器同时忽略unchecked和deprecation的警告信息
     @ApiOperation(value = "单个附件上传", notes = "单个附件上传接口")
     @PostMapping(value = "/uploadFile")
-    public Result<FileInfoDto> uploadFile(@RequestParam(value = "file") MultipartFile file) {
+    public Result<FileInfoDto> uploadFile(@RequestParam MultipartFile file) {
         HttpServletRequest request = RequestUtils.getHttpServletRequest();
         String userCode = request.getHeader("userCode");
         return Result.success("附件上传成功！", fileService.uploadFile(file, userCode));
