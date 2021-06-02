@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class FileController {
     @SuppressWarnings(value = {"unchecked", "deprecation"})//告诉编译器同时忽略unchecked和deprecation的警告信息
     @ApiOperation(value = "单个附件上传", notes = "单个附件上传接口")
     @PostMapping(value = "/uploadFile")
-    public Result<FileInfoDto> uploadFile(@RequestParam(value = "file") MultipartFile file) {
+    public Result<FileInfoDto> uploadFile(@RequestParam MultipartFile file) {
         HttpServletRequest request = RequestUtils.getHttpServletRequest();
         String userCode = request.getHeader("userCode");
         return Result.success("附件上传成功！", fileService.uploadFile(file, userCode));
@@ -50,7 +51,7 @@ public class FileController {
     @SuppressWarnings(value = {"unchecked", "deprecation"})//告诉编译器同时忽略unchecked和deprecation的警告信息
     @ApiOperation(value = "单个附件下载", notes = "单个附件下载接口")
     @GetMapping(value = "/downloadFile")
-    public Result<?> downloadFile(@RequestParam(value = "id") Long id) {
+    public Result<?> downloadFile(Long id) {
         fileService.downloadFile(id);
         return Result.success("附件下载成功！");
     }

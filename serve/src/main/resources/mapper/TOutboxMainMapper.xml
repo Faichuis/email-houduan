@@ -23,6 +23,7 @@
             main.pet_name,
             main.user_code,
             main.remark,
+            main.creat_date,
             content.content
         FROM
             t_outbox_main main

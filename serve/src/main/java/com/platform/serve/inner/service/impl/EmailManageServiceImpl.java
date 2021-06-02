@@ -1,6 +1,8 @@
 package com.platform.serve.inner.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.platform.entity.TContentInfo;
 import com.platform.entity.TFileInfo;
@@ -231,8 +233,28 @@ public class EmailManageServiceImpl implements EmailManageService {
     public Page<EmailInfoDto> selectInboxEmailList(EmailInfoDto emailInfoDto) {
         //校验数据
         CommonUtils.checkStringException(emailInfoDto.getUserCode(), "请输入用户账号！");
-        Page<EmailInfoDto> page = new Page<>(emailInfoDto.getPage(), emailInfoDto.getPageSize());
-        return tInboxMainMapper.selectInboxEmailList(page, emailInfoDto);
+
+        Page<EmailInfoDto> result = new Page<>();
+        IPage<TInboxMain> page = new Page<>(emailInfoDto.getPage(), emailInfoDto.getPageSize());
+        LambdaQueryWrapper<TInboxMain> wrapper = new LambdaQueryWrapper<TInboxMain>()
+                .eq(StringUtils.isNoneEmpty(emailInfoDto.getAccount()), TInboxMain::getAccount, emailInfoDto.getAccount())
+                .eq(StringUtils.isNoneEmpty(emailInfoDto.getFromAddress()),TInboxMain::getFromAddress,emailInfoDto.getFromAddress())
+                .eq(StringUtils.isNoneEmpty(emailInfoDto.getReceivers()),TInboxMain::getReceivers,emailInfoDto.getReceivers())
+                .like(StringUtils.isNoneEmpty(emailInfoDto.getSubject()),TInboxMain::getSubject,emailInfoDto.getSubject())
+                .eq(TInboxMain::getDataStatus,"1");
+        IPage<TInboxMain> tInboxMainPage = tInboxMainMapper.selectPage(page, wrapper);
+        List<TInboxMain> records = tInboxMainPage.getRecords();
+
+        List<EmailInfoDto> list = new ArrayList<>();
+
+        for (TInboxMain record : records) {
+            EmailInfoDto emailInfoDto1 = new EmailInfoDto();
+            BeanUtils.copyProperties(record,emailInfoDto1);
+            list.add(emailInfoDto1);
+        }
+        result.setRecords(list);
+
+        return result;
     }
 
 

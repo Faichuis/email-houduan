@@ -36,6 +36,7 @@
             main.account,
             main.user_code,
             main.remark,
+            main.creat_date,
             content.content
         FROM
             t_inbox_main main
